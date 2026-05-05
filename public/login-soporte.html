@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tickets — Soporte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body">
+
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-header-left">
+      <a href="index.html" class="back-link">← Volver al inicio</a>
+      <h1>Sistema de Tickets</h1>
+      <h2>Acceso — Soporte Técnico</h2>
+    </div>
+    <div class="page-header-right">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="position:static;margin:0;">🌙</button>
+      <div class="clock-box" style="position:static;margin:0;grid-column:unset;grid-row:unset;">
+        <div class="clock-time" id="clock">00:00:00</div>
+        <div class="clock-date" id="date">Lunes, 1 de enero</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid principal -->
+  <div class="main-grid">
+
+    <!-- Registro empleado -->
+    <div class="card" style="grid-column:1; grid-row:1/3;">
+      <h3>📋 Solicitar Acceso</h3>
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="reg-name" placeholder="Tu nombre" />
+      </div>
+      <div class="form-group">
+        <label>Apellido</label>
+        <input type="text" id="reg-apellido" placeholder="Tu apellido" />
+      </div>
+      <div class="form-group">
+        <label>DNI</label>
+        <input type="text" id="reg-dni" placeholder="Tu número de DNI" />
+      </div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="reg-email" placeholder="tu@correo.com" />
+      </div>
+      <div class="form-group">
+        <label>Nueva contraseña</label>
+        <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="form-group">
+        <label>Repetir contraseña</label>
+        <input type="password" id="reg-confirm" placeholder="Repetí tu contraseña" />
+      </div>
+      <button class="btn-submit" onclick="registerSoporte()">ENVIAR SOLICITUD</button>
+      <div class="msg" id="reg-msg"></div>
+    </div>
+
+    <!-- Login empleado -->
+    <div class="card" style="grid-column:2; grid-row:1;">
+      <h3>🔐 Iniciar Sesión</h3>
+      <div class="form-group">
+        <label>Correo electrónico o DNI</label>
+        <input type="text" id="login-identifier" placeholder="tu@correo.com o DNI" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-password" placeholder="Tu contraseña" />
+      </div>
+      <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+      <button class="btn-submit" onclick="loginSoporte()">INICIAR SESIÓN</button>
+      <div class="msg" id="login-msg"></div>
+    </div>
+
+    <!-- Login Admin -->
+    <div class="card" style="grid-column:2; grid-row:2; background: var(--black);">
+      <h3 style="color: var(--orange); border-color: var(--orange);">👑 Administrador</h3>
+      <div class="form-group">
+        <label style="color: #94a3b8;">Usuario</label>
+        <input type="text" id="admin-identifier" placeholder="Email o DNI del admin" />
+      </div>
+      <div class="form-group">
+        <label style="color: #94a3b8;">Contraseña</label>
+        <input type="password" id="admin-password" placeholder="Contraseña del admin" />
+      </div>
+      <button class="btn-submit" onclick="loginAdmin()" style="background: var(--orange); color: var(--black);">INGRESAR COMO ADMIN</button>
+      <div class="msg" id="admin-msg"></div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script src="login-soporte.js"></script>
+</body>
+</html>

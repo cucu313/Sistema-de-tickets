@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tickets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Tickets decorativos de fondo -->
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+  <div class="ticket">🎫</div>
+
+  <div class="container">
+
+    <!-- Título -->
+    <div class="title-box">BIENVENIDOS AL SISTEMA DE TICKETS</div>
+
+    <!-- Reloj -->
+    <div class="clock-box">
+      <div class="clock-time" id="clock">00:00:00</div>
+      <div class="clock-date" id="date">Lunes, 1 de enero</div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="desc-box">
+      <p>
+        Plataforma de <span>soporte técnico</span> para gestionar tus consultas y problemas de forma rápida y eficiente.
+        Creá un ticket, seguí su estado en tiempo real y chateá directamente con nuestro equipo de soporte.
+      </p>
+    </div>
+
+    <!-- Botones -->
+    <div class="buttons">
+      <button class="btn-main" onclick="window.location.href='login-cliente.html'">CLIENTE</button>
+      <button class="btn-main" onclick="window.location.href='login-soporte.html'">SOPORTE</button>
+    </div>
+
+    <!-- Botón tema -->
+    <button class="theme-btn" id="themeBtn" title="Cambiar tema">"TEMA"</button>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

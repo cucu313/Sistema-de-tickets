@@ -10,6 +10,7 @@ const path       = require('path');
 const authRoutes    = require('./routes/auth');
 const ticketRoutes  = require('./routes/tickets');
 const messageRoutes = require('./routes/messages');
+const adminRoutes   = require('./routes/admin');
 
 // ── Socket service ─────────────────────────────────────────
 const initSocket = require('./services/socketService');
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth',     authRoutes);
 app.use('/api/tickets',  ticketRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/admin',    adminRoutes);
 
 // ── Ruta raíz ─────────────────────────────────────────────
 app.get('/', (req, res) => {
@@ -46,7 +48,7 @@ app.use((req, res) => {
 
 // ── Error handler global ──────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error('"ERROR" Error:', err.message);
+  console.error('X Error:', err.message);
   res.status(err.status || 500).json({
     message: err.message || 'Error interno del servidor'
   });
@@ -61,5 +63,5 @@ app.set('io', io);
 // ── Iniciar servidor ──────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`"listo" Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`"EXITOS" Servidor corriendo en http://localhost:${PORT}`);
 });

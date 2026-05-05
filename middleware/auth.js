@@ -34,5 +34,10 @@ const onlyUser = (req, res, next) => {
   }
   next();
 };
-
-module.exports = { verifyToken, onlySupport, onlyUser };
+const onlyAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Acceso denegado: solo administradores' });
+  }
+  next();
+};
+module.exports = { verifyToken, onlySupport, onlyUser, onlyAdmin }
