@@ -2,7 +2,6 @@ const UserModel = require('../models/userModel');
 
 const adminController = {
 
-  // GET /api/admin/pending — listar empleados pendientes
   async getPending(req, res) {
     try {
       const users = await UserModel.findPending();
@@ -13,7 +12,6 @@ const adminController = {
     }
   },
 
-  // GET /api/admin/support — listar empleados aprobados
   async getSupport(req, res) {
     try {
       const users = await UserModel.findSupport();
@@ -24,11 +22,19 @@ const adminController = {
     }
   },
 
-  // PATCH /api/admin/approve/:id — aprobar empleado
+  async getSuspended(req, res) {
+    try {
+      const users = await UserModel.findSuspended();
+      res.json({ users });
+    } catch (err) {
+      console.error('Error en getSuspended:', err.message);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  },
+
   async approve(req, res) {
     try {
-      const { id } = req.params;
-      await UserModel.updateRole(id, 'support');
+      await UserModel.updateRole(req.params.id, 'support');
       res.json({ message: 'Empleado aprobado como soporte técnico' });
     } catch (err) {
       console.error('Error en approve:', err.message);
@@ -36,14 +42,27 @@ const adminController = {
     }
   },
 
-  // PATCH /api/admin/reject/:id — rechazar empleado (queda como user)
   async reject(req, res) {
     try {
-      const { id } = req.params;
-      await UserModel.updateRole(id, 'user');
+      await UserModel.updateRole(req.params.id, 'user');
       res.json({ message: 'Solicitud rechazada. El usuario quedó como cliente.' });
     } catch (err) {
       console.error('Error en reject:', err.message);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  },
+
+  async changeRole(req, res) {
+    try {
+      const { role } = req.body;
+      const validRoles = ['user', 'support', 'suspended', 'pending'];
+      if (!validRoles.includes(role)) {
+        return res.status(400).json({ message: 'Rol inválido' });
+      }
+      await UserModel.updateRole(req.params.id, role);
+      res.json({ message: 'Rol actualizado correctamente' });
+    } catch (err) {
+      console.error('Error en changeRole:', err.message);
       res.status(500).json({ message: 'Error interno del servidor' });
     }
   },

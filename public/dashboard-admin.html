@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tickets — Administrador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body class="dashboard-body">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <h1>Sistema de Tickets</h1>
+      <span class="dash-role dash-role-admin">ADMINISTRADOR</span>
+    </div>
+    <div class="dash-header-right">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="position:static;margin:0;">TEMA</button>
+      <div class="clock-box" style="position:static;margin:0;grid-column:unset;grid-row:unset;">
+        <div class="clock-time" id="clock">00:00:00</div>
+        <div class="clock-date" id="date">Lunes, 1 de enero</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid admin -->
+  <div class="admin-grid">
+
+    <!-- Solicitudes pendientes -->
+    <div class="admin-table-card">
+      <div class="admin-table-title">📋 SOLICITUD PARA EMPLEADO DE SOPORTE</div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Aprobar</th>
+            <th>Rechazar</th>
+          </tr>
+        </thead>
+        <tbody id="pending-list">
+          <tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empleados de soporte activos -->
+    <div class="admin-table-card">
+      <div class="admin-table-title">✅ EMPLEADOS DE SOPORTE</div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Deshabilitar</th>
+            <th>Despedir</th>
+          </tr>
+        </thead>
+        <tbody id="support-list">
+          <tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empleados en suspenso -->
+    <div class="admin-table-card">
+      <div class="admin-table-title">⏸️ EMPLEADOS EN SUSPENSO</div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Habilitar</th>
+            <th>Despedir</th>
+          </tr>
+        </thead>
+        <tbody id="suspended-list">
+          <tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Mensaje global -->
+  <div style="padding: 0 1.5rem;">
+    <div class="msg" id="admin-msg"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="dashboard-admin.js"></script>
+</body>
+</html>

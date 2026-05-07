@@ -36,7 +36,6 @@ const UserModel = {
     return result.insertId;
   },
 
-  // Listar todos los usuarios con rol pending
   async findPending() {
     const [rows] = await db.query(
       `SELECT id, name, apellido, dni, email, created_at
@@ -46,12 +45,10 @@ const UserModel = {
     return rows;
   },
 
-  // Cambiar rol de un usuario
   async updateRole(id, role) {
     await db.query('UPDATE users SET role = ? WHERE id = ?', [role, id]);
   },
 
-  // Listar todos los usuarios de soporte
   async findSupport() {
     const [rows] = await db.query(
       `SELECT id, name, apellido, dni, email, created_at
@@ -59,6 +56,22 @@ const UserModel = {
        ORDER BY name ASC`
     );
     return rows;
+  },
+
+  async findSuspended() {
+    const [rows] = await db.query(
+      `SELECT id, name, apellido, dni, email, created_at
+       FROM users WHERE role = 'suspended'
+       ORDER BY name ASC`
+    );
+    return rows;
+  },
+
+  async updateProfile(id, { name, apellido, telefono, domicilio }) {
+    await db.query(
+      'UPDATE users SET name=?, apellido=?, telefono=?, domicilio=? WHERE id=?',
+      [name, apellido, telefono, domicilio, id]
+    );
   },
 
 };

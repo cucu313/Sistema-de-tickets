@@ -5,16 +5,11 @@ const { verifyToken, onlyAdmin } = require('../middleware/auth');
 
 router.use(verifyToken, onlyAdmin);
 
-// GET  /api/admin/pending      → listar pendientes
-router.get('/pending', adminController.getPending);
-
-// GET  /api/admin/support      → listar soporte aprobado
-router.get('/support', adminController.getSupport);
-
-// PATCH /api/admin/approve/:id → aprobar
-router.patch('/approve/:id', adminController.approve);
-
-// PATCH /api/admin/reject/:id  → rechazar
-router.patch('/reject/:id', adminController.reject);
+router.get('/pending',         adminController.getPending);
+router.get('/support',         adminController.getSupport);
+router.get('/suspended',       adminController.getSuspended);
+router.patch('/approve/:id',   adminController.approve);
+router.patch('/reject/:id',    adminController.reject);
+router.patch('/role/:id',      adminController.changeRole);
 
 module.exports = router;

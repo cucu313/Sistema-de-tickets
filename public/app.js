@@ -29,7 +29,7 @@ const themeBtn = document.getElementById('themeBtn');
 if (themeBtn) {
   themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
-    themeBtn.textContent = document.body.classList.contains('dark') ? 'claro' : 'oscuro';
+    themeBtn.textContent = document.body.classList.contains('dark') ? 'oscuro' : 'claro';
 
   });
 }

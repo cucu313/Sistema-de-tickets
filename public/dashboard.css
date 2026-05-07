@@ -1,0 +1,470 @@
+/* ============================================================
+   Dashboard — dashboard.css
+   ============================================================ */
+
+:root {
+  --dash-bg:       #0d0d0d;
+  --dash-card:     #1e1e1e;
+  --dash-border:   #2d2d2d;
+  --dash-text:     #f1f5f9;
+  --dash-subtext:  #94a3b8;
+  --dash-input-bg: #2d2d2d;
+  --dash-msg-bg:   #1a1a1a;
+  --dash-row-bg:   #1e1e1e;
+  --dash-row-hover:#1a1500;
+  --dash-notice-bg:#1e1e1e;
+}
+
+body.dark {
+  --dash-bg:       #0d0d0d;
+  --dash-card:     #1e1e1e;
+  --dash-border:   #2d2d2d;
+  --dash-text:     #f1f5f9;
+  --dash-subtext:  #94a3b8;
+  --dash-input-bg: #2d2d2d;
+  --dash-msg-bg:   #1a1a1a;
+  --dash-row-bg:   #1e1e1e;
+  --dash-row-hover:#1a1500;
+  --dash-notice-bg:#1e1e1e;
+}
+
+body:not(.dark).dashboard-body {
+  --dash-bg:       #f1f5f9;
+  --dash-card:     #ffffff;
+  --dash-border:   #e2e8f0;
+  --dash-text:     #1e293b;
+  --dash-subtext:  #64748b;
+  --dash-input-bg: #f8fafc;
+  --dash-msg-bg:   #f8fafc;
+  --dash-row-bg:   #ffffff;
+  --dash-row-hover:#fff8f0;
+  --dash-notice-bg:#ffffff;
+}
+
+.dashboard-body {
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 0;
+  background: var(--dash-bg);
+  min-height: 100vh;
+  transition: background 0.3s;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.dash-header {
+  width: 100%;
+  background: var(--dash-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1.5rem;
+  border-bottom: 2px solid var(--orange);
+  transition: background 0.3s;
+}
+.dash-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.dash-header-left h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  color: var(--orange);
+  letter-spacing: 2px;
+}
+.dash-role {
+  background: var(--orange);
+  color: #0d0d0d;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  padding: 0.2rem 0.8rem;
+  border-radius: 6px;
+  letter-spacing: 1px;
+}
+.dash-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.dash-header-right .clock-box {
+  background: var(--dash-card);
+  border: 1px solid var(--orange);
+  min-width: 130px;
+  transition: background 0.3s;
+}
+.dash-header-right .clock-time { color: var(--orange); font-size: 1.6rem; }
+.dash-header-right .clock-date { color: var(--dash-subtext); }
+
+/* Botón cerrar sesión */
+.btn-logout {
+  background: #dc2626;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-logout:hover { opacity: 0.85; }
+
+/* ── Main grid ────────────────────────────────────────────── */
+.dash-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  align-items: start;
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
+.dash-card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #2d9e2d;
+}
+.dash-card-center { border-color: #3b6fd4; }
+.dash-card-title {
+  background: var(--dash-card);
+  color: var(--orange);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  padding: 0.6rem 1rem;
+  letter-spacing: 1px;
+  text-align: center;
+  border-bottom: 2px solid #2d9e2d;
+  transition: background 0.3s;
+}
+.dash-card-title-blue { border-bottom-color: #3b6fd4; }
+.dash-card-body {
+  background: var(--dash-card);
+  padding: 1rem;
+  transition: background 0.3s;
+}
+
+/* ── Formulario ticket ────────────────────────────────────── */
+.dash-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--orange);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+.dash-textarea {
+  width: 100%;
+  height: 120px;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  padding: 0.6rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  resize: none;
+  outline: none;
+  background: var(--dash-input-bg);
+  color: var(--dash-text);
+  transition: background 0.3s, color 0.3s;
+}
+.dash-textarea:focus { border-color: var(--orange); }
+
+.dash-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  background: var(--dash-input-bg);
+  color: var(--dash-text);
+  transition: background 0.3s, color 0.3s;
+}
+.dash-select:focus { border-color: var(--orange); }
+
+.ticket-info {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.ticket-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--dash-text);
+}
+.ticket-info-row span:first-child { min-width: 80px; }
+.dash-select-inline {
+  border: 1px solid var(--dash-border);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  outline: none;
+  background: var(--dash-input-bg);
+  color: var(--dash-text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── Botón primario ───────────────────────────────────────── */
+.dash-btn-primary {
+  width: 100%;
+  background: var(--dash-card);
+  color: var(--orange);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  border: none;
+  border-top: 2px solid var(--orange);
+  padding: 0.8rem;
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.3s;
+}
+.dash-btn-primary:hover { opacity: 0.85; }
+
+/* ── Mensajería ───────────────────────────────────────────── */
+.dash-messages {
+  background: var(--dash-msg-bg);
+  min-height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: background 0.3s;
+}
+.no-ticket-msg {
+  color: var(--dash-subtext);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: auto;
+}
+.message-item {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  max-width: 80%;
+}
+.message-item.mine {
+  background: var(--orange);
+  color: #0d0d0d;
+  align-self: flex-end;
+}
+.message-item.other {
+  background: var(--dash-border);
+  color: var(--dash-text);
+  align-self: flex-start;
+}
+.message-time {
+  font-size: 0.72rem;
+  opacity: 0.7;
+  margin-top: 0.2rem;
+}
+.dash-input-row {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: var(--dash-card);
+  border-top: 1px solid var(--dash-border);
+  transition: background 0.3s;
+}
+.dash-msg-input {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--dash-border);
+  border-radius: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  background: var(--dash-input-bg);
+  color: var(--dash-text);
+  transition: background 0.3s, color 0.3s;
+}
+.dash-msg-input:focus { border-color: var(--orange); }
+.dash-btn-send {
+  background: var(--orange);
+  color: #0d0d0d;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-weight: 800;
+}
+.dash-btn-send:hover { opacity: 0.85; }
+
+.dash-notice {
+  background: var(--dash-notice-bg);
+  padding: 0.8rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #dc2626;
+  text-align: center;
+  border-top: 1px solid var(--dash-border);
+  transition: background 0.3s;
+}
+
+/* ── Acciones laterales ───────────────────────────────────── */
+.dash-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding-top: 2.5rem;
+}
+.dash-btn-action {
+  background: var(--dash-card);
+  border: 2px solid var(--orange);
+  color: var(--orange);
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.dash-btn-action:hover { background: var(--orange); color: #0d0d0d; }
+
+/* ── Lista de tickets ─────────────────────────────────────── */
+.dash-tickets-section {
+  padding: 0 1.5rem 2rem;
+}
+.dash-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  color: var(--orange);
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
+}
+.tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ticket-row {
+  background: var(--dash-row-bg);
+  border: 1px solid var(--dash-border);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.3s;
+}
+.ticket-row:hover { border-color: var(--orange); }
+.ticket-row.active { border-color: var(--orange); background: var(--dash-row-hover); }
+.ticket-row-id { font-family: 'Bebas Neue'; color: var(--orange); font-size: 1rem; min-width: 80px; }
+.ticket-row-title { flex: 1; color: var(--dash-text); font-size: 0.9rem; font-weight: 700; }
+.ticket-row-status {
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+.status-pending     { background: #fef3c7; color: #92400e; }
+.status-in_progress { background: #dbeafe; color: #1e40af; }
+.status-resolved    { background: #dcfce7; color: #166534; }
+.status-closed      { background: #f1f5f9; color: #64748b; }
+.ticket-row-priority { font-size: 0.78rem; font-weight: 800; color: var(--orange); }
+
+/* ── Roles ────────────────────────────────────────────────── */
+.dash-role-support { background: #3b6fd4; color: #fff; }
+.dash-role-admin   { background: #7c3aed; color: #fff; }
+
+/* ── Admin tables ─────────────────────────────────────────── */
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+.admin-table-card {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid var(--orange);
+}
+.admin-table-title {
+  background: var(--dash-card);
+  color: var(--dash-text);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  padding: 0.6rem 1rem;
+  letter-spacing: 1px;
+  transition: background 0.3s;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--dash-card);
+  transition: background 0.3s;
+}
+.admin-table th {
+  background: var(--dash-input-bg);
+  color: var(--dash-text);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--orange);
+}
+.admin-table td {
+  font-size: 0.82rem;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--dash-border);
+  font-weight: 600;
+  color: var(--dash-text);
+}
+.btn-approve { background: #16a34a; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+.btn-reject  { background: #dc2626; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+.btn-disable { background: #f97316; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+.btn-enable  { background: #0ea5e9; color: #fff; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+.btn-fire    { background: #0d0d0d; color: var(--orange); border: 1px solid var(--orange); padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; }
+
+/* ── Modal modificar datos ────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  display: none;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--dash-card);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 480px;
+  border: 2px solid var(--orange);
+}
+.modal h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--orange);
+  margin-bottom: 1.2rem;
+  letter-spacing: 1px;
+}
+.modal-close {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--dash-subtext);
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}

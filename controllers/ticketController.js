@@ -124,7 +124,19 @@ const ticketController = {
       res.status(500).json({ message: 'Error interno del servidor' });
     }
   },
-
+async delete(req, res) {
+  try {
+    const ticket = await TicketModel.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: 'Ticket no encontrado' });
+    if (ticket.user_id !== req.user.id) return res.status(403).json({ message: 'Acceso denegado' });
+    if (ticket.status !== 'closed') return res.status(400).json({ message: 'Solo podés eliminar tickets cerrados' });
+    await TicketModel.delete(req.params.id);
+    res.json({ message: 'Ticket eliminado correctamente' });
+  } catch (err) {
+    console.error('Error en delete ticket:', err.message);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+},
 };
 
 module.exports = ticketController;

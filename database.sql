@@ -180,6 +180,22 @@ INSERT INTO messages (ticket_id, user_id, content) VALUES
   (3, 4, 'Confirmamos el cobro duplicado. El reembolso se acredita en 3-5 dias.'),
   (3, 2, 'Muchas gracias por la rapidez.');
 
+  -- ============================================================
+--  CAMBIOS POSTERIORES A LA CREACION
+-- ============================================================
+
+-- Agregar roles admin y pending
+ALTER TABLE users 
+  MODIFY COLUMN role ENUM('user','support','admin','pending') NOT NULL DEFAULT 'user';
+
+-- Agregar columnas dni y apellido
+ALTER TABLE users ADD COLUMN dni VARCHAR(20) UNIQUE AFTER name;
+ALTER TABLE users ADD COLUMN apellido VARCHAR(150) NOT NULL DEFAULT '' AFTER name;
+
+-- Usuario administrador del sistema
+INSERT INTO users (name, apellido, dni, email, password_hash, role) 
+VALUES ('Admin', 'Sistema', '00000000', 'admin@sistema.com', '$2a$10$arwSPIO2gQFFrZp9VkJBjeatp3z4/vzEKY/hpi9/jPgqBcE.t3jA.', 'admin');
+
 -- ============================================================
 --  FIN DEL SCRIPT
 -- ============================================================

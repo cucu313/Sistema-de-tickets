@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tickets — Soporte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body class="dashboard-body">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <h1>Sistema de Tickets</h1>
+      <span class="dash-role dash-role-support">SOPORTE</span>
+    </div>
+    <div class="dash-header-right">
+      <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="position:static;margin:0;">TEMA</button>
+      <div class="clock-box" style="position:static;margin:0;grid-column:unset;grid-row:unset;">
+        <div class="clock-time" id="clock">00:00:00</div>
+        <div class="clock-date" id="date">Lunes, 1 de enero</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="dash-main">
+
+    <!-- Columna izquierda: Ticket solución -->
+    <div class="dash-card dash-card-left">
+      <div class="dash-card-title">crear Ticket</div>
+      <div class="dash-card-body">
+        <label class="dash-label">BREVE DESCRIPCIÓN DE LA SOLUCIÓN:</label>
+        <textarea id="solution-desc" class="dash-textarea" placeholder="Describí la solución..."></textarea>
+
+        <label class="dash-label" style="margin-top:0.8rem;">completar campos:</label>
+        <div class="ticket-info">
+          <div class="ticket-info-row"><span>Ticket #</span><span id="ticket-num">—</span></div>
+          <div class="ticket-info-row"><span>Estado:</span>
+            <select id="ticket-status" class="dash-select-inline">
+              <option value="in_progress">En progreso</option>
+              <option value="resolved">Resuelto</option>
+              <option value="closed">Cerrado</option>
+            </select>
+          </div>
+          <div class="ticket-info-row">
+            <span>Prioridad:</span>
+            <select id="ticket-priority" class="dash-select-inline">
+              <option value="high">ALTA</option>
+              <option value="medium">MEDIA</option>
+              <option value="low">BAJA</option>
+            </select>
+          </div>
+          <div class="ticket-info-row"><span>Cliente:</span><span id="ticket-client">—</span></div>
+          <div class="ticket-info-row"><span>Problema:</span><span id="ticket-problem">—</span></div>
+          <div class="ticket-info-row"><span>Fecha:</span><span id="ticket-date">—</span></div>
+        </div>
+      </div>
+      <button class="dash-btn-primary" onclick="enviarTicketCliente()">enviar ticket a Cliente</button>
+      <div class="msg" id="ticket-msg"></div>
+    </div>
+
+    <!-- Columna central: Mensajería -->
+    <div class="dash-card dash-card-center">
+      <div class="dash-card-title dash-card-title-blue">Hablar con Cliente - Mensajería</div>
+      <div class="dash-messages" id="messages-container">
+        <div class="no-ticket-msg">Seleccioná un ticket para ver los mensajes.</div>
+      </div>
+      <div class="dash-input-row">
+        <input type="text" id="msg-input" class="dash-msg-input" placeholder="Escribí tu mensaje..." />
+        <button class="dash-btn-send" onclick="enviarMensaje()">enviar</button>
+      </div>
+      <div class="dash-notice" style="color:#16a34a;">
+        TRATE DE SOLUCIONAR EL PROBLEMA.<br>
+        <strong>"GRACIAS POR SER PARTE DEL SOPORTE"</strong>
+      </div>
+    </div>
+
+    <!-- Columna derecha: Acciones -->
+    <div class="dash-actions">
+      <button class="dash-btn-action" onclick="guardarMensajes()">⬇️ Guardar mensajes</button>
+      <button class="dash-btn-action" onclick="guardarTicketRealizado()">⬇️ Guardar ticket realizado</button>
+      <button class="dash-btn-action" onclick="guardarTicketCliente()">⬇️ Guardar ticket de cliente</button>
+    </div>
+
+  </div>
+
+  <!-- Lista de todos los tickets -->
+  <div class="dash-tickets-section">
+    <h3 class="dash-section-title">Todos los Tickets</h3>
+    <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
+      <button class="dash-btn-action" style="font-size:0.78rem;" onclick="filtrarTickets('')">Todos</button>
+      <button class="dash-btn-action" style="font-size:0.78rem;" onclick="filtrarTickets('pending')">Pendientes</button>
+      <button class="dash-btn-action" style="font-size:0.78rem;" onclick="filtrarTickets('in_progress')">En progreso</button>
+      <button class="dash-btn-action" style="font-size:0.78rem;" onclick="filtrarTickets('resolved')">Resueltos</button>
+    </div>
+    <div id="tickets-list" class="tickets-list"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="dashboard-support.js"></script>
+</body>
+</html>

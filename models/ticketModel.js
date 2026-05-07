@@ -103,7 +103,9 @@ const TicketModel = {
     const [rows] = await db.query('SELECT * FROM categories ORDER BY name');
     return rows;
   },
-
+async delete(id) {
+  await db.query('DELETE FROM tickets WHERE id = ?', [id]);
+},
 };
 
 module.exports = TicketModel;

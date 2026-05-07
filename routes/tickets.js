@@ -34,3 +34,4 @@ router.patch('/:id', onlySupport, ticketController.update);
 
 module.exports = router;
 
+router.delete('/:id', ticketController.delete);
