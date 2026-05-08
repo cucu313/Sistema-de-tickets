@@ -79,6 +79,7 @@ const ticketController = {
       console.error('Error en getById ticket:', err.message);
       res.status(500).json({ message: 'Error interno del servidor' });
     }
+     
   },
 
   // ── PATCH /api/tickets/:id ───────────────────────────────
@@ -112,7 +113,7 @@ const ticketController = {
       res.status(500).json({ message: 'Error interno del servidor' });
     }
   },
-
+ 
   // ── GET /api/tickets/categories ──────────────────────────
   // Obtener categorías
   async getCategories(req, res) {
@@ -137,6 +138,21 @@ async delete(req, res) {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 },
+
+async getClientInfo(req, res) {
+  try {
+    const ticket = await TicketModel.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: 'Ticket no encontrado' });
+    const UserModel = require('../models/userModel');
+    const client = await UserModel.findById(ticket.user_id);
+    if (!client) return res.status(404).json({ message: 'Cliente no encontrado' });
+    res.json({ client });
+  } catch (err) {
+    console.error('Error en getClientInfo:', err.message);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+},
+
 };
 
 module.exports = ticketController;

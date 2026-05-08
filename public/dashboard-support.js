@@ -193,58 +193,122 @@ document.getElementById('msg-input').addEventListener('keypress', (e) => {
 });
 
 // Guardar archivos
-function guardarMensajes() {
+async function guardarMensajes() {
   if (!selectedTicketId) { alert('Seleccioná un ticket primero.'); return; }
-  const msgs = document.getElementById('messages-container').innerText;
-  descargarTxt(msgs, `mensajes_ticket_${selectedTicketId}.txt`);
+
+  // Cargar mensajes
+  let mensajes = [];
+  try {
+    const res  = await fetch(`${API}/messages/${selectedTicketId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    mensajes = data.messages;
+  } catch (err) {
+    alert('Error al cargar mensajes.'); return;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width  = 620;
+  canvas.height = Math.max(300, 100 + mensajes.length * 80);
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#f97316';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+  ctx.fillStyle = '#f97316';
+  ctx.font = 'bold 22px Arial';
+  ctx.fillText(`MENSAJES — Ticket #${selectedTicketId}`, 30, 52);
+
+  ctx.strokeStyle = '#f97316';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, 65); ctx.lineTo(590, 65); ctx.stroke();
+
+  let y = 92;
+  ctx.font = '13px Arial';
+  mensajes.forEach(m => {
+    const esPropio = m.user_id == user.id;
+    ctx.fillStyle = esPropio ? '#f97316' : '#94a3b8';
+    ctx.font = 'bold 13px Arial';
+    ctx.fillText(`${m.user_name} (${new Date(m.created_at).toLocaleString('es-AR')}):`, 30, y);
+    y += 18;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '13px Arial';
+    ctx.fillStyle = '#ffffff';
+ctx.font = '13px Arial';
+const palabras = m.content.split(' ');
+let linea = '';
+for (const p of palabras) {
+  const prueba = linea + p + ' ';
+  if (ctx.measureText(prueba).width > 550 && linea !== '') {
+    ctx.fillText(linea, 40, y); y += 18; linea = p + ' ';
+  } else { linea = prueba; }
+}
+if (linea) { ctx.fillText(linea, 40, y); }
+y += 28;
+   
+  });
+
+  ctx.fillStyle = '#f97316';
+  ctx.font = 'italic 12px Arial';
+  ctx.fillText('Sistema de Tickets — Documento generado automáticamente', 30, canvas.height - 18);
+
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = `mensajes_ticket_${selectedTicketId}.png`;
+  a.click();
 }
 
-function guardarTicketRealizado() {
-  if (!selectedTicketId || !selectedTicket) { alert('Seleccioná un ticket primero.'); return; }
-  const ahora = new Date();
-  const fecha = ahora.toLocaleDateString('es-AR');
-  const hora  = ahora.toLocaleTimeString('es-AR');
-  const content = 
-`TICKET RESUELTO
-===============================
-Ticket #${selectedTicketId}
-Título:     ${selectedTicket.title}
-Categoría:  ${selectedTicket.category_name}
-Prioridad:  ${translatePriority(selectedTicket.priority)}
-Estado:     ${translateStatus(selectedTicket.status)}
--------------------------------
-Cliente:    ${selectedTicket.client_name}
--------------------------------
-Descripción del problema:
-${selectedTicket.description}
-===============================
-Fecha: ${fecha}  Hora: ${hora}
-`;
-  descargarTxt(content, `ticket_${selectedTicketId}_resuelto.txt`);
-}
+function guardarTicketRealizado() { guardarComoImagen('realizado'); }
+function guardarTicketCliente()   { guardarComoImagen('cliente'); }
 
-function guardarTicketCliente() {
+async function guardarComoImagen(tipo) {
   if (!selectedTicketId || !selectedTicket) { alert('Seleccioná un ticket primero.'); return; }
+
+  const canvas = document.createElement('canvas');
+  canvas.width  = 620;
+  canvas.height = 360;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#f97316';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+  ctx.fillStyle = '#f97316';
+  ctx.font = 'bold 22px Arial';
+  ctx.fillText(tipo === 'realizado' ? 'TICKET RESUELTO' : 'TICKET DEL CLIENTE', 30, 52);
+
+  ctx.strokeStyle = '#f97316';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, 65); ctx.lineTo(590, 65); ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '15px Arial';
+  let y = 92;
+  ctx.fillText(`Ticket #:  ${selectedTicketId}`, 30, y); y += 26;
+  ctx.fillText(`Título:    ${selectedTicket.title}`, 30, y); y += 26;
+  ctx.fillText(`Cliente:   ${selectedTicket.client_name}`, 30, y); y += 26;
+  ctx.fillText(`Categoría: ${selectedTicket.category_name || '—'}`, 30, y); y += 26;
+  ctx.fillText(`Estado:    ${translateStatus(selectedTicket.status)}`, 30, y); y += 26;
+  ctx.fillText(`Prioridad: ${translatePriority(selectedTicket.priority).replace(/[🔴🟡🟢]/g, '').trim()}`, 30, y); y += 26;
+
   const ahora = new Date();
-  const fecha = ahora.toLocaleDateString('es-AR');
-  const hora  = ahora.toLocaleTimeString('es-AR');
-  const content =
-`TICKET DEL CLIENTE
-===============================
-Ticket #${selectedTicketId}
-Título:     ${selectedTicket.title}
-Categoría:  ${selectedTicket.category_name}
-Prioridad:  ${translatePriority(selectedTicket.priority)}
-Estado:     ${translateStatus(selectedTicket.status)}
--------------------------------
-Cliente:    ${selectedTicket.client_name}
--------------------------------
-Descripción del problema:
-${selectedTicket.description}
-===============================
-Fecha: ${fecha}  Hora: ${hora}
-`;
-  descargarTxt(content, `ticket_${selectedTicketId}_cliente.txt`);
+  ctx.fillText(`Fecha:     ${ahora.toLocaleDateString('es-AR')}`, 30, y); y += 26;
+  ctx.fillText(`Hora:      ${ahora.toLocaleTimeString('es-AR')}`, 30, y);
+
+  ctx.fillStyle = '#f97316';
+  ctx.font = 'italic 12px Arial';
+  ctx.fillText('Sistema de Tickets — Documento generado automáticamente', 30, canvas.height - 18);
+
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = `ticket_${selectedTicketId}_${tipo}.png`;
+  a.click();
 }
 
 function descargarTxt(content, filename) {
@@ -263,3 +327,31 @@ function initSocket() {
     if (msg.ticket_id == selectedTicketId) loadMessages(selectedTicketId);
   });
 }
+
+async function verInfoCliente() {
+  if (!selectedTicketId) { alert('Seleccioná un ticket primero.'); return; }
+  try {
+    const res  = await fetch(`${API}/tickets/${selectedTicketId}/client`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const c    = data.client;
+    document.getElementById('cliente-info').innerHTML = `
+      <div style="font-size:0.95rem;font-weight:700;color:var(--dash-text);">
+        <p>👤 <strong>Nombre:</strong> ${c.name} ${c.apellido}</p>
+        <p>🪪 <strong>DNI:</strong> ${c.dni}</p>
+        <p>📧 <strong>Email:</strong> ${c.email}</p>
+        <p>📞 <strong>Teléfono:</strong> ${c.telefono || 'No cargado'}</p>
+        <p>🏠 <strong>Domicilio:</strong> ${c.domicilio || 'No cargado'}</p>
+      </div>
+    `;
+    document.getElementById('modalCliente').classList.add('active');
+  } catch (err) {
+    alert('Error al cargar la información del cliente.');
+  }
+}
+
+function cerrarModalCliente() {
+  document.getElementById('modalCliente').classList.remove('active');
+}
+

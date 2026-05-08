@@ -6,7 +6,6 @@ const API = 'http://localhost:3000/api';
 let token = localStorage.getItem('token');
 let user  = JSON.parse(localStorage.getItem('user') || '{}');
 
-// Verificar sesión
 if (!token || user.role !== 'admin') {
   window.location.href = 'login-soporte.html';
 }
@@ -16,23 +15,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadAll() {
-  await Promise.all([loadPending(), loadSupport(), loadSuspended()]);
+  await Promise.all([
+    loadPending(),
+    loadSupport(),
+    loadSuspended(),
+    loadClients(),
+    loadBanned(),
+  ]);
 }
 
-// ── Cargar pendientes ──────────────────────────────────────
+// ── Empleados ──────────────────────────────────────────────
 async function loadPending() {
   try {
-    const res  = await fetch(`${API}/admin/pending`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res  = await fetch(`${API}/admin/pending`, { headers: { 'Authorization': `Bearer ${token}` } });
     const data = await res.json();
     const tbody = document.getElementById('pending-list');
-
     if (!data.users.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Sin solicitudes pendientes.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#94a3b8;">Sin solicitudes pendientes.</td></tr>';
       return;
     }
-
     tbody.innerHTML = data.users.map(u => `
       <tr>
         <td>${u.email}</td>
@@ -41,25 +42,18 @@ async function loadPending() {
         <td><button class="btn-reject"  onclick="rechazar(${u.id})">Rechazar</button></td>
       </tr>
     `).join('');
-  } catch (err) {
-    console.error('Error cargando pendientes:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
-// ── Cargar empleados de soporte activos ────────────────────
 async function loadSupport() {
   try {
-    const res  = await fetch(`${API}/admin/support`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res  = await fetch(`${API}/admin/support`, { headers: { 'Authorization': `Bearer ${token}` } });
     const data = await res.json();
     const tbody = document.getElementById('support-list');
-
     if (!data.users.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Sin empleados de soporte.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#94a3b8;">Sin empleados de soporte.</td></tr>';
       return;
     }
-
     tbody.innerHTML = data.users.map(u => `
       <tr>
         <td>${u.email}</td>
@@ -68,25 +62,18 @@ async function loadSupport() {
         <td><button class="btn-fire"    onclick="despedir(${u.id})">Despedir</button></td>
       </tr>
     `).join('');
-  } catch (err) {
-    console.error('Error cargando soporte:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
-// ── Cargar empleados en suspenso ───────────────────────────
 async function loadSuspended() {
   try {
-    const res  = await fetch(`${API}/admin/suspended`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
+    const res  = await fetch(`${API}/admin/suspended`, { headers: { 'Authorization': `Bearer ${token}` } });
     const data = await res.json();
     const tbody = document.getElementById('suspended-list');
-
     if (!data.users.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="color:#94a3b8;text-align:center;padding:1rem;">Sin empleados en suspenso.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#94a3b8;">Sin empleados en suspenso.</td></tr>';
       return;
     }
-
     tbody.innerHTML = data.users.map(u => `
       <tr>
         <td>${u.email}</td>
@@ -95,33 +82,106 @@ async function loadSuspended() {
         <td><button class="btn-fire"   onclick="despedir(${u.id})">Despedir</button></td>
       </tr>
     `).join('');
-  } catch (err) {
-    console.error('Error cargando suspendidos:', err);
-  }
+  } catch (err) { console.error(err); }
 }
 
-// ── Acciones ───────────────────────────────────────────────
-async function aprobar(id) {
-  await cambiarRol(id, 'approve', '✅ Empleado aprobado como soporte.');
+// ── Clientes ───────────────────────────────────────────────
+async function loadClients() {
+  try {
+    const res  = await fetch(`${API}/admin/clients`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    const tbody = document.getElementById('clients-list');
+    if (!data.users.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:#94a3b8;">Sin clientes.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.users.map(u => `
+      <tr>
+        <td>${u.dni}</td>
+        <td>${u.name} ${u.apellido}</td>
+        <td><button class="btn-reject" onclick="darDeBaja(${u.id})">－</button></td>
+        <td><button class="btn-enable" onclick="verInfoCliente(${u.id})">ver +</button></td>
+      </tr>
+    `).join('');
+  } catch (err) { console.error(err); }
 }
 
-async function rechazar(id) {
-  await cambiarRol(id, 'reject', '✅ Solicitud rechazada. Quedó como cliente.');
+async function loadBanned() {
+  try {
+    const res  = await fetch(`${API}/admin/banned`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const data = await res.json();
+    const tbody = document.getElementById('banned-list');
+    if (!data.users.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:1rem;color:#94a3b8;">Sin clientes dados de baja.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.users.map(u => `
+      <tr>
+        <td>${u.dni}</td>
+        <td>${u.name} ${u.apellido}</td>
+        <td><button class="btn-fire"    onclick="eliminarCliente(${u.id})">✖</button></td>
+        <td><button class="btn-approve" onclick="darDeAlta(${u.id})">＋</button></td>
+        <td><button class="btn-enable"  onclick="verInfoCliente(${u.id})">ver +</button></td>
+      </tr>
+    `).join('');
+  } catch (err) { console.error(err); }
 }
 
-async function deshabilitar(id) {
-  await cambiarRolDirecto(id, 'suspended', '⏸️ Empleado deshabilitado.');
-}
-
-async function habilitar(id) {
-  await cambiarRolDirecto(id, 'support', '✅ Empleado habilitado nuevamente.');
-}
-
+// ── Acciones empleados ─────────────────────────────────────
+async function aprobar(id)      { await cambiarRol(id, 'approve', '✅ Empleado aprobado.'); }
+async function rechazar(id)     { await cambiarRol(id, 'reject',  '✅ Solicitud rechazada.'); }
+async function deshabilitar(id) { await cambiarRolDirecto(id, 'suspended', '⏸️ Empleado deshabilitado.'); }
+async function habilitar(id)    { await cambiarRolDirecto(id, 'support',   '✅ Empleado habilitado.'); }
 async function despedir(id) {
   if (!confirm('¿Estás seguro que querés despedir a este empleado?')) return;
-  await cambiarRolDirecto(id, 'user', '🚫 Empleado despedido. Quedó como cliente.');
+  await cambiarRolDirecto(id, 'user', '🚫 Empleado despedido.');
 }
 
+// ── Acciones clientes ──────────────────────────────────────
+async function darDeBaja(id) {
+  if (!confirm('¿Dar de baja a este cliente?')) return;
+  await cambiarRolDirecto(id, 'banned', '🚫 Cliente dado de baja.');
+}
+async function darDeAlta(id) {
+  await cambiarRolDirecto(id, 'user', '✅ Cliente reactivado.');
+}
+async function eliminarCliente(id) {
+  if (!confirm('¿Eliminar permanentemente este cliente? Esta acción no se puede deshacer.')) return;
+  try {
+    const res  = await fetch(`${API}/admin/user/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    mostrarMsg(res.ok ? 'success' : 'error', res.ok ? '🗑️ Cliente eliminado.' : data.message);
+    if (res.ok) loadAll();
+  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
+}
+
+async function verInfoCliente(id) {
+  try {
+    const res  = await fetch(`${API}/admin/client-info/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const c    = data.user;
+    document.getElementById('modal-cliente-info').innerHTML = `
+      <p>👤 <strong>Nombre:</strong> ${c.name} ${c.apellido}</p>
+      <p>🪪 <strong>DNI:</strong> ${c.dni}</p>
+      <p>📧 <strong>Email:</strong> ${c.email}</p>
+      <p>📞 <strong>Teléfono:</strong> ${c.telefono || 'No cargado'}</p>
+      <p>🏠 <strong>Domicilio:</strong> ${c.domicilio || 'No cargado'}</p>
+      <p>📅 <strong>Registrado:</strong> ${new Date(c.created_at).toLocaleDateString('es-AR')}</p>
+    `;
+    document.getElementById('modalInfoCliente').classList.add('active');
+  } catch (err) { alert('Error al cargar información.'); }
+}
+
+function cerrarModalInfo() {
+  document.getElementById('modalInfoCliente').classList.remove('active');
+}
+
+// ── Helpers ────────────────────────────────────────────────
 async function cambiarRol(id, action, successMsg) {
   try {
     const res  = await fetch(`${API}/admin/${action}/${id}`, {
@@ -131,9 +191,7 @@ async function cambiarRol(id, action, successMsg) {
     const data = await res.json();
     mostrarMsg(res.ok ? 'success' : 'error', res.ok ? successMsg : data.message);
     if (res.ok) loadAll();
-  } catch (err) {
-    mostrarMsg('error', 'X Error al conectar con el servidor.');
-  }
+  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
 }
 
 async function cambiarRolDirecto(id, role, successMsg) {
@@ -146,9 +204,7 @@ async function cambiarRolDirecto(id, role, successMsg) {
     const data = await res.json();
     mostrarMsg(res.ok ? 'success' : 'error', res.ok ? successMsg : data.message);
     if (res.ok) loadAll();
-  } catch (err) {
-    mostrarMsg('error', 'X Error al conectar con el servidor.');
-  }
+  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
 }
 
 function mostrarMsg(type, text) {
@@ -156,4 +212,10 @@ function mostrarMsg(type, text) {
   el.className = `msg ${type}`;
   el.textContent = text;
   setTimeout(() => { el.className = 'msg'; }, 4000);
+}
+
+function cerrarSesion() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  window.location.href = 'login-soporte.html';
 }

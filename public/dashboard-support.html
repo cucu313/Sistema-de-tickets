@@ -84,7 +84,18 @@
       <button class="dash-btn-action" onclick="guardarMensajes()">⬇️ Guardar mensajes</button>
       <button class="dash-btn-action" onclick="guardarTicketRealizado()">⬇️ Guardar ticket realizado</button>
       <button class="dash-btn-action" onclick="guardarTicketCliente()">⬇️ Guardar ticket de cliente</button>
+      <button class="dash-btn-action" onclick="verInfoCliente()">👤 Ver información del cliente</button>
     </div>
+    <!-- Modal info cliente -->
+<div class="modal-overlay" id="modalCliente">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModalCliente()">×</button>
+    <h3>👤 Información del Cliente</h3>
+    <div id="cliente-info" style="display:flex;flex-direction:column;gap:0.6rem;margin-top:1rem;">
+      <p style="color:var(--dash-subtext);">Seleccioná un ticket primero.</p>
+    </div>
+  </div>
+</div>
 
   </div>
 

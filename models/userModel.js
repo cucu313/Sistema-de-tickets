@@ -20,13 +20,13 @@ const UserModel = {
     return rows[0] || null;
   },
 
-  async findById(id) {
-    const [rows] = await db.query(
-      'SELECT id, name, apellido, dni, email, role, created_at FROM users WHERE id = ?',
-      [id]
-    );
-    return rows[0] || null;
-  },
+async findById(id) {
+  const [rows] = await db.query(
+    'SELECT id, name, apellido, dni, email, telefono, domicilio, role, created_at FROM users WHERE id = ?',
+    [id]
+  );
+  return rows[0] || null;
+},
 
   async create({ name, apellido, dni, email, password_hash, role = 'user' }) {
     const [result] = await db.query(
@@ -74,6 +74,30 @@ const UserModel = {
     );
   },
 
+  // Listar todos los clientes activos
+async findClients() {
+  const [rows] = await db.query(
+    `SELECT id, name, apellido, dni, email, telefono, domicilio, created_at
+     FROM users WHERE role = 'user'
+     ORDER BY name ASC`
+  );
+  return rows;
+},
+
+// Listar clientes dados de baja
+async findBanned() {
+  const [rows] = await db.query(
+    `SELECT id, name, apellido, dni, email, telefono, domicilio, created_at
+     FROM users WHERE role = 'banned'
+     ORDER BY name ASC`
+  );
+  return rows;
+},
+
+// Eliminar usuario permanentemente
+async deleteUser(id) {
+  await db.query('DELETE FROM users WHERE id = ?', [id]);
+},
 };
 
 module.exports = UserModel;

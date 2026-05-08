@@ -31,6 +31,9 @@ router.get('/:id', ticketController.getById);
 // PATCH /api/tickets/:id        → actualizar ticket (soporte)
 router.patch('/:id', onlySupport, ticketController.update);
 
+// GET /api/tickets/:id/client — ver datos del cliente (solo soporte)
+  router.get('/:id/client', onlySupport, ticketController.getClientInfo);
+
 
 module.exports = router;
 
