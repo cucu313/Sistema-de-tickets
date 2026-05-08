@@ -12,6 +12,7 @@ if (!token || user.role !== 'admin') {
 
 document.addEventListener('DOMContentLoaded', () => {
   loadAll();
+  loadHorario();
 });
 
 async function loadAll() {
@@ -128,22 +129,22 @@ async function loadBanned() {
 }
 
 // ── Acciones empleados ─────────────────────────────────────
-async function aprobar(id)      { await cambiarRol(id, 'approve', '✅ Empleado aprobado.'); }
-async function rechazar(id)     { await cambiarRol(id, 'reject',  '✅ Solicitud rechazada.'); }
-async function deshabilitar(id) { await cambiarRolDirecto(id, 'suspended', '⏸️ Empleado deshabilitado.'); }
-async function habilitar(id)    { await cambiarRolDirecto(id, 'support',   '✅ Empleado habilitado.'); }
+async function aprobar(id)      { await cambiarRol(id, 'approve', '✔ Empleado aprobado.'); }
+async function rechazar(id)     { await cambiarRol(id, 'reject',  '✔ Solicitud rechazada.'); }
+async function deshabilitar(id) { await cambiarRolDirecto(id, 'suspended', '🧊 Empleado deshabilitado.'); }
+async function habilitar(id)    { await cambiarRolDirecto(id, 'support',   '✔ Empleado habilitado.'); }
 async function despedir(id) {
   if (!confirm('¿Estás seguro que querés despedir a este empleado?')) return;
-  await cambiarRolDirecto(id, 'user', '🚫 Empleado despedido.');
+  await cambiarRolDirecto(id, 'user', '📉 Empleado despedido.');
 }
 
 // ── Acciones clientes ──────────────────────────────────────
 async function darDeBaja(id) {
   if (!confirm('¿Dar de baja a este cliente?')) return;
-  await cambiarRolDirecto(id, 'banned', '🚫 Cliente dado de baja.');
+  await cambiarRolDirecto(id, 'banned', '📉 Cliente dado de baja.');
 }
 async function darDeAlta(id) {
-  await cambiarRolDirecto(id, 'user', '✅ Cliente reactivado.');
+  await cambiarRolDirecto(id, 'user', '✔ Cliente reactivado.');
 }
 async function eliminarCliente(id) {
   if (!confirm('¿Eliminar permanentemente este cliente? Esta acción no se puede deshacer.')) return;
@@ -153,9 +154,9 @@ async function eliminarCliente(id) {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await res.json();
-    mostrarMsg(res.ok ? 'success' : 'error', res.ok ? '🗑️ Cliente eliminado.' : data.message);
+    mostrarMsg(res.ok ? 'success' : 'error', res.ok ? '📃💥 Cliente eliminado.' : data.message);
     if (res.ok) loadAll();
-  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
+  } catch (err) { mostrarMsg('error', '❗ Error al conectar.'); }
 }
 
 async function verInfoCliente(id) {
@@ -191,7 +192,7 @@ async function cambiarRol(id, action, successMsg) {
     const data = await res.json();
     mostrarMsg(res.ok ? 'success' : 'error', res.ok ? successMsg : data.message);
     if (res.ok) loadAll();
-  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
+  } catch (err) { mostrarMsg('error', '❗ Error al conectar.'); }
 }
 
 async function cambiarRolDirecto(id, role, successMsg) {
@@ -204,7 +205,7 @@ async function cambiarRolDirecto(id, role, successMsg) {
     const data = await res.json();
     mostrarMsg(res.ok ? 'success' : 'error', res.ok ? successMsg : data.message);
     if (res.ok) loadAll();
-  } catch (err) { mostrarMsg('error', '❌ Error al conectar.'); }
+  } catch (err) { mostrarMsg('error', '❗ Error al conectar.'); }
 }
 
 function mostrarMsg(type, text) {
@@ -218,4 +219,38 @@ function cerrarSesion() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
   window.location.href = 'login-soporte.html';
+}
+
+async function loadHorario() {
+  try {
+    const res  = await fetch(`${API}/settings/horario`);
+    const data = await res.json();
+    const input = document.getElementById('horario-input');
+    if (input) input.value = data.value || '';
+  } catch (err) { console.error(err); }
+}
+
+async function guardarHorario() {
+  const value = document.getElementById('horario-input').value.trim();
+  const msgEl = document.getElementById('horario-msg');
+  msgEl.className = 'msg';
+
+  try {
+    const res  = await fetch(`${API}/settings/horario`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ value }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msgEl.className = 'msg success';
+      msgEl.textContent = '✔ Horario actualizado correctamente.';
+    } else {
+      msgEl.className = 'msg error';
+      msgEl.textContent = '❗ ' + data.message;
+    }
+  } catch (err) {
+    msgEl.className = 'msg error';
+    msgEl.textContent = '❗ Error al conectar con el servidor.';
+  }
 }

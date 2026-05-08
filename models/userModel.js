@@ -28,12 +28,13 @@ async findById(id) {
   return rows[0] || null;
 },
 
-  async create({ name, apellido, dni, email, password_hash, role = 'user' }) {
-    const [result] = await db.query(
-      'INSERT INTO users (name, apellido, dni, email, password_hash, role) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, apellido, dni, email, password_hash, role]
-    );
-    return result.insertId;
+  async create({ name, apellido, dni, email, password_hash, role = 'user', security_question = null, security_answer = null }) {
+  const [result] = await db.query(
+    'INSERT INTO users (name, apellido, dni, email, password_hash, role, security_question, security_answer) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [name, apellido, dni, email, password_hash, role, security_question, security_answer]
+  );
+  return result.insertId;
+
   },
 
   async findPending() {
@@ -97,6 +98,17 @@ async findBanned() {
 // Eliminar usuario permanentemente
 async deleteUser(id) {
   await db.query('DELETE FROM users WHERE id = ?', [id]);
+},
+async updatePassword(id, password_hash) {
+  await db.query('UPDATE users SET password_hash = ? WHERE id = ?', [password_hash, id]);
+},
+
+async findByDniAndEmail(dni, email) {
+  const [rows] = await db.query(
+    'SELECT * FROM users WHERE dni = ? AND email = ?',
+    [dni, email]
+  );
+  return rows[0] || null;
 },
 };
 

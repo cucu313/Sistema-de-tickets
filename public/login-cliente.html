@@ -70,6 +70,21 @@
         <label>Repetir contraseña</label>
         <input type="password" id="reg-confirm" placeholder="Repetí tu contraseña" />
       </div>
+      <div class="form-group">
+  <label>Pregunta de seguridad</label>
+  <select id="reg-question" style="width:100%;padding:0.65rem 0.9rem;border:2px solid #e2e8f0;border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
+    <option value="">-- Seleccioná una pregunta --</option>
+    <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
+    <option value="¿Cuál es el nombre de tu mascota?">¿Cuál es el nombre de tu mascota?</option>
+    <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+    <option value="¿Cuál es tu comida favorita?">¿Cuál es tu comida favorita?</option>
+    <option value="¿Cuál es el nombre de tu mejor amigo?">¿Cuál es el nombre de tu mejor amigo?</option>
+  </select>
+     </div>
+       <div class="form-group">
+  <label>Respuesta secreta</label>
+       <input type="text" id="reg-answer" placeholder="Tu respuesta secreta" />
+    </div>
       <button class="btn-submit" onclick="register()">REGISTRARSE</button>
       <div class="msg" id="reg-msg"></div>
     </div>
@@ -85,7 +100,7 @@
         <label>Contraseña</label>
         <input type="password" id="login-password" placeholder="Tu contraseña" />
       </div>
-      <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+      <a href="#" class="forgot-link" onclick="abrirModalRecuperar(); return false;">¿Olvidaste tu contraseña?</a>
       <button class="btn-submit" onclick="login()">INICIAR SESIÓN</button>
       <div class="msg" id="login-msg"></div>
     </div>
@@ -104,7 +119,42 @@
     </div>
 
   </div>
-
+  <!-- Modal recuperar contraseña -->
+<div class="modal-overlay" id="modalRecuperar">
+  <div class="modal" style="background:#fff;">
+    <button class="modal-close" onclick="cerrarModalRecuperar()" style="color:#0d0d0d;">×</button>
+    <h3 style="color:#f97316;">🔑 Recuperar Contraseña</h3>
+    <div class="form-group" style="margin-top:1rem;">
+      <label>DNI</label>
+      <input type="text" id="rec-dni" placeholder="Tu DNI" />
+    </div>
+    <div class="form-group" style="margin-top:0.6rem;">
+      <label>Email</label>
+      <input type="email" id="rec-email" placeholder="Tu email" />
+    </div>
+    <div class="form-group" style="margin-top:0.6rem;">
+      <label>Pregunta de seguridad</label>
+      <select id="rec-question" style="width:100%;padding:0.65rem 0.9rem;border:2px solid #e2e8f0;border-radius:8px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:600;outline:none;">
+        <option value="">-- Seleccioná tu pregunta --</option>
+        <option value="¿Cuál es tu color favorito?">¿Cuál es tu color favorito?</option>
+        <option value="¿Cuál es el nombre de tu mascota?">¿Cuál es el nombre de tu mascota?</option>
+        <option value="¿En qué ciudad naciste?">¿En qué ciudad naciste?</option>
+        <option value="¿Cuál es tu comida favorita?">¿Cuál es tu comida favorita?</option>
+        <option value="¿Cuál es el nombre de tu mejor amigo?">¿Cuál es el nombre de tu mejor amigo?</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-top:0.6rem;">
+      <label>Respuesta secreta</label>
+      <input type="text" id="rec-answer" placeholder="Tu respuesta secreta" />
+    </div>
+    <div class="form-group" style="margin-top:0.6rem;">
+      <label>Nueva contraseña</label>
+      <input type="password" id="rec-password" placeholder="Mínimo 6 caracteres" />
+    </div>
+    <div class="msg" id="rec-msg" style="margin-top:0.8rem;"></div>
+    <button class="btn-submit" style="margin-top:1rem;" onclick="recuperarContrasena()">CAMBIAR CONTRASEÑA</button>
+  </div>
+</div>
   <script src="app.js"></script>
   <script src="login-cliente.js"></script>
 </body>

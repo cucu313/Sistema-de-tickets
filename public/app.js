@@ -32,4 +32,20 @@ if (themeBtn) {
     themeBtn.textContent = document.body.classList.contains('dark') ? 'oscuro' : 'claro';
 
   });
+
+  // Cargar horario de atención
+async function loadHorario() {
+  try {
+    const res  = await fetch('http://localhost:3000/api/settings/horario');
+    const data = await res.json();
+    const box  = document.getElementById('horario-box');
+    const txt  = document.getElementById('horario-text');
+    if (box && txt && data.value) {
+      txt.textContent = data.value;
+      box.style.display = 'block';
+    }
+  } catch (err) { /* silencioso */ }
+}
+loadHorario();
+
 }

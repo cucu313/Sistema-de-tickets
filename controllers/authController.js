@@ -7,7 +7,7 @@ const authController = {
   // POST /api/auth/register (cliente)
   async register(req, res) {
     try {
-      const { name, apellido, dni, email, password, confirmPassword } = req.body;
+      const { name, apellido, dni, email, password, confirmPassword, security_question, security_answer } = req.body;
       if (!name || !apellido || !dni || !email || !password || !confirmPassword) {
         return res.status(400).json({ message: 'Todos los campos son requeridos' });
       }
@@ -22,7 +22,8 @@ const authController = {
       const existingDni = await UserModel.findByDni(dni);
       if (existingDni) return res.status(409).json({ message: 'El DNI ya está registrado' });
       const password_hash = await bcrypt.hash(password, 10);
-      const userId = await UserModel.create({ name, apellido, dni, email, password_hash, role: 'user' });
+      const answer_hash = security_answer ? await bcrypt.hash(security_answer.toLowerCase(), 10) : null;
+      const userId = await UserModel.create({ name, apellido, dni, email, password_hash, role: 'user', security_question, security_answer: answer_hash });
       res.status(201).json({ message: 'Usuario registrado correctamente', userId });
     } catch (err) {
       console.error('Error en register:', err.message);
@@ -112,7 +113,34 @@ const authController = {
       res.status(500).json({ message: 'Error interno del servidor' });
     }
   },
+// POST /api/auth/recover
+async recover(req, res) {
+  try {
+    const { dni, email, security_answer, new_password } = req.body;
 
+    if (!dni || !email || !security_answer || !new_password) {
+      return res.status(400).json({ message: 'Todos los campos son requeridos' });
+    }
+
+    const user = await UserModel.findByEmailOrDni(email);
+    if (!user || user.dni !== dni) {
+      return res.status(401).json({ message: 'DNI o email incorrecto' });
+    }
+
+    const match = await bcrypt.compare(security_answer.toLowerCase(), user.security_answer);
+    if (!match) {
+      return res.status(401).json({ message: 'Respuesta de seguridad incorrecta' });
+    }
+
+    const password_hash = await bcrypt.hash(new_password, 10);
+    await UserModel.updatePassword(user.id, password_hash);
+
+    res.json({ message: 'Contraseña actualizada correctamente' });
+  } catch (err) {
+    console.error('Error en recover:', err.message);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+},
 };
 
 module.exports = authController;

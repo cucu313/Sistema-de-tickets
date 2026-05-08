@@ -11,6 +11,8 @@ const authRoutes    = require('./routes/auth');
 const ticketRoutes  = require('./routes/tickets');
 const messageRoutes = require('./routes/messages');
 const adminRoutes   = require('./routes/admin');
+const settingsRoutes = require('./routes/settings');
+
 
 // ── Socket service ─────────────────────────────────────────
 const initSocket = require('./services/socketService');
@@ -35,6 +37,7 @@ app.use('/api/auth',     authRoutes);
 app.use('/api/tickets',  ticketRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/admin',    adminRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // ── Ruta raíz ─────────────────────────────────────────────
 app.get('/', (req, res) => {

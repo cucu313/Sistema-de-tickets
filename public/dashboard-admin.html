@@ -8,6 +8,20 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="dashboard.css" />
 </head>
+
+<!-- Sección editar horario -->
+<div style="padding: 0 1.5rem 2rem;">
+  <div class="admin-table-card" style="max-width:600px;">
+    <div class="admin-table-title">🕗 HORARIO DE ATENCIÓN</div>
+    <div style="padding:1rem;background:var(--dash-card);">
+      <label style="font-size:0.82rem;font-weight:800;color:var(--orange);display:block;margin-bottom:0.5rem;">MODIFICAR HORARIO</label>
+      <textarea id="horario-input" style="width:100%;height:80px;padding:0.6rem;border:1px solid var(--dash-border);border-radius:6px;font-family:'Nunito',sans-serif;font-size:0.9rem;resize:none;outline:none;background:var(--dash-input-bg);color:var(--dash-text);"></textarea>
+      <button class="btn-approve" style="margin-top:0.6rem;padding:0.5rem 1.2rem;font-size:0.9rem;" onclick="guardarHorario()">Guardar horario</button>
+      <div class="msg" id="horario-msg" style="margin-top:0.6rem;"></div>
+    </div>
+  </div>
+</div>
+
 <body class="dashboard-body">
 
   <!-- Header -->
@@ -18,7 +32,7 @@
     </div>
     <div class="dash-header-right">
       <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
-      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="position:static;margin:0;">🌙</button>
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="position:static;margin:0;">TEMA</button>
       <div class="clock-box" style="position:static;margin:0;grid-column:unset;grid-row:unset;">
         <div class="clock-time" id="clock">00:00:00</div>
         <div class="clock-date" id="date">Lunes, 1 de enero</div>
@@ -26,12 +40,14 @@
     </div>
   </div>
 
+  
+
   <!-- Grid empleados -->
   <div class="admin-grid">
 
     <!-- Solicitudes pendientes -->
     <div class="admin-table-card">
-      <div class="admin-table-title">📋 SOLICITUD PARA EMPLEADO DE SOPORTE</div>
+      <div class="admin-table-title">👷📋 SOLICITUD PARA EMPLEADO DE SOPORTE</div>
       <table class="admin-table">
         <thead>
           <tr><th>Email</th><th>Nombre</th><th>Aprobar</th><th>Rechazar</th></tr>
@@ -44,7 +60,7 @@
 
     <!-- Empleados activos -->
     <div class="admin-table-card">
-      <div class="admin-table-title">✅ EMPLEADOS DE SOPORTE</div>
+      <div class="admin-table-title">✔ EMPLEADOS DE SOPORTE</div>
       <table class="admin-table">
         <thead>
           <tr><th>Email</th><th>Nombre</th><th>Deshabilitar</th><th>Despedir</th></tr>
@@ -57,7 +73,7 @@
 
     <!-- Empleados en suspenso -->
     <div class="admin-table-card">
-      <div class="admin-table-title">⏸️ EMPLEADOS EN SUSPENSO</div>
+      <div class="admin-table-title">🧊 EMPLEADOS EN SUSPENSO</div>
       <table class="admin-table">
         <thead>
           <tr><th>Email</th><th>Nombre</th><th>Habilitar</th><th>Despedir</th></tr>
@@ -75,7 +91,7 @@
 
     <!-- Clientes activos -->
     <div class="admin-table-card">
-      <div class="admin-table-title">👥 CLIENTES</div>
+      <div class="admin-table-title">🤝 CLIENTES</div>
       <table class="admin-table">
         <thead>
           <tr><th>DNI</th><th>Nombre</th><th>Dar de baja</th><th>Ver info</th></tr>
@@ -88,7 +104,7 @@
 
     <!-- Clientes dados de baja -->
     <div class="admin-table-card">
-      <div class="admin-table-title">🚫 CLIENTES DADOS DE BAJA</div>
+      <div class="admin-table-title">📉 CLIENTES DADOS DE BAJA</div>
       <table class="admin-table">
         <thead>
           <tr><th>DNI</th><th>Nombre</th><th>Eliminar</th><th>Dar de alta</th><th>Ver info</th></tr>

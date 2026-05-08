@@ -373,3 +373,27 @@ body {
   padding: 2rem 1rem;
 }
 .login-body .ticket { position: fixed !important; }
+
+.modal-overlay {
+  position: fixed !important;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay.active { display: flex; }
+
+/* Horario de atención */
+.horario-box {
+  background: #ff69b4;
+  border-radius: var(--radius);
+  padding: 0.8rem 1.4rem;
+  grid-column: 1;
+  grid-row: 0;
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #0d0d0d;
+  animation: slideDown 0.6s ease both;
+}
